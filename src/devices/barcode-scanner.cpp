@@ -4,11 +4,13 @@
 #include <mutex>
 #include <thread>
 
-static std::atomic<bool> _bcs_stop;
+static std::atomic<bool> _bcs_stop = false;
 static std::mutex _bcs_m;
 static std::condition_variable _bcs_scan_con;
 static std::string _bcs_data;
 static int _bcs_return_int = 0;
+
+static std::atomic<bool> _bcs_opened = false;
 
 static size_t now (void)
 {
@@ -57,10 +59,17 @@ bool StartScan (std::string serialPortName, int mobilePhoneMode, char presentati
 
 	trace(BCS_CallBackRegister(ScannedBarcodeDataCallBack));
 
-	trace(_bcs_return_int = BCS_Open(serialPortName.c_str(), mobilePhoneMode));
-	if (_bcs_return_int != HM_DEV_OK) {
-		where = "BCS_Open";
-		goto error;
+	// This conditional is true if _bcs_opened is false. Inside the block
+	// _bcs_opened has already been set to true. We need to change it back to
+	// false only if an error occured.
+	bool expected = false;
+	if (std::atomic_compare_exchange_strong(&_bcs_opened, &expected, true)) {
+		trace(_bcs_return_int = BCS_Open(serialPortName.c_str(), mobilePhoneMode));
+		if (_bcs_return_int != HM_DEV_OK) {
+			_bcs_opened = false;
+			where = "BCS_Open";
+			goto error;
+		}
 	}
 
 	trace(_bcs_return_int = BCS_Reset());
@@ -81,7 +90,6 @@ error:
 	unsigned char errmsg[6] = {0};
 	BCS_GetLastError(errmsg);
 	fprintf(stderr, "%zu [BCS] %s failed with %d: %s\n", now(), where, _bcs_return_int, errmsg);
-	BCS_Close();
 	return false;
 }
 
@@ -107,7 +115,6 @@ public:
 		 */
 		log("ScanWorker: Waiting");
 		_bcs_scan_con.wait(lock, _bcs_stop_pred);
-		BCS_Close();
 	}
 
 	void OnOK()
@@ -124,7 +131,6 @@ private:
 void BCSCancelScan ()
 {
 	trace(BCS_CancelScanCode());
-	BCS_Close();
 	_bcs_stop = true;
 	_bcs_return_int = HM_DEV_CANCEL;
 	_bcs_data = std::string("");
