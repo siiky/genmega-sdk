@@ -19,7 +19,6 @@ exports.scan = (serialPortName, mobilePhoneMode) => {
       (return_int, decoded) => {
         if (timeout) {
           clearTimeout(timeout)
-          console.log("BCSScan resolving with return_int", return_int, "and decoded", decoded)
           resolve({ decoded, return_int })
         }
       }
