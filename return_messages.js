@@ -30,4 +30,6 @@ module.exports = {
   '-25': 'The file not exist or not opened in the file path',
   '-26': 'Unknown error occurs',
   '-27': 'Need to check the status of the device to determine whether to proceed.',
+  '-28': 'The license key is not registered. (CDU Device Only)',
+  '-29': 'NovaLed B/D(SIU) communication port open error',
 }
