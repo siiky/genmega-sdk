@@ -116,10 +116,11 @@ Napi::Object _CDUGetLastError (const Napi::CallbackInfo &info)
 	return mapToNapiObject(CDUGetLastError(), info);
 }
 
-Napi::Object _CDUOpen (const Napi::CallbackInfo &info)
+Napi::Object _CDUOpenEx (const Napi::CallbackInfo &info)
 {
-	std::string serialPortName = info[0].ToString();
-	return mapToNapiObject(CDUOpen(serialPortName.c_str()), info);
+	std::string licenseKey = info[0].ToString();
+	std::string serialPortName = info[1].ToString();
+	return mapToNapiObject(CDUOpenEx(licenseKey.c_str(), serialPortName.c_str()), info);
 }
 
 Napi::Object _CDUClose (const Napi::CallbackInfo &info)
@@ -267,7 +268,7 @@ Napi::Object Init (Napi::Env env, Napi::Object exports)
 	exports.Set(Napi::String::New(env, "BAUStackBillV2"), Napi::Function::New(env, BAUStackBillV2));
 	exports.Set(Napi::String::New(env, "BAUGetSupportCurrencyV2"), Napi::Function::New(env, BAUGetSupportCurrencyV2));
 	exports.Set(Napi::String::New(env, "_CDUGetLastError"), Napi::Function::New(env, _CDUGetLastError));
-	exports.Set(Napi::String::New(env, "_CDUOpen"), Napi::Function::New(env, _CDUOpen));
+	exports.Set(Napi::String::New(env, "_CDUOpenEx"), Napi::Function::New(env, _CDUOpenEx));
 	exports.Set(Napi::String::New(env, "_CDUClose"), Napi::Function::New(env, _CDUClose));
 	exports.Set(Napi::String::New(env, "_CDUStatus"), Napi::Function::New(env, _CDUStatus));
 	exports.Set(Napi::String::New(env, "_CDUVerifyLicenseKey"), Napi::Function::New(env, _CDUVerifyLicenseKey));

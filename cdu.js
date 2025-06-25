@@ -7,8 +7,8 @@ exports.getLastError = () => {
     return data
 }
 
-exports.open = serialPortName => {
-    const { return_int, data } = genmega._CDUOpen(serialPortName)
+exports.openEx = (licenseKey, serialPortName) => {
+    const { return_int, data } = genmega._CDUOpenEx(licenseKey, serialPortName)
     const return_code = return_codes[return_int]
     const return_message = return_messages[return_int]
     console.log('CDU Firmware Version: ', data)

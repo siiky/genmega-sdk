@@ -12,11 +12,11 @@ std::string mapDispensedResultToString (DISPENSED_RESULT dispensed)
 }
 
 
-operationResult CDUOpen (const char * serialPortName)
+operationResult CDUOpenEx (const char * licenseKey, const char * serialPortName)
 {
 	operationResult result;
 	unsigned char szVerInfo[15] = {0};
-	result.return_int = CDU_Open(serialPortName, szVerInfo);
+	result.return_int = CDU_OpenEx(licenseKey, serialPortName, szVerInfo);
 	result.data = std::string(reinterpret_cast<char const *>(szVerInfo));
 	return result;
 }
