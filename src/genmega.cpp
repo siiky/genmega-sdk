@@ -133,10 +133,10 @@ Napi::Object _CDUStatus (const Napi::CallbackInfo &info)
 	return mapToNapiObject(CDUStatus(), info);
 }
 
-Napi::Object _CDUVerifyLicenseKey (const Napi::CallbackInfo &info)
+Napi::Object _CDURegisterLicenseKey (const Napi::CallbackInfo &info)
 {
 	std::string licenseKey = info[0].ToString();
-	Napi::Object ret = mapToNapiObject(CDUVerifyLicenseKey(licenseKey.data()), info);
+	Napi::Object ret = mapToNapiObject(CDURegisterLicenseKey(licenseKey.data()), info);
 	return ret;
 }
 
@@ -271,7 +271,7 @@ Napi::Object Init (Napi::Env env, Napi::Object exports)
 	exports.Set(Napi::String::New(env, "_CDUOpenEx"), Napi::Function::New(env, _CDUOpenEx));
 	exports.Set(Napi::String::New(env, "_CDUClose"), Napi::Function::New(env, _CDUClose));
 	exports.Set(Napi::String::New(env, "_CDUStatus"), Napi::Function::New(env, _CDUStatus));
-	exports.Set(Napi::String::New(env, "_CDUVerifyLicenseKey"), Napi::Function::New(env, _CDUVerifyLicenseKey));
+	exports.Set(Napi::String::New(env, "_CDURegisterLicenseKey"), Napi::Function::New(env, _CDURegisterLicenseKey));
 	exports.Set(Napi::String::New(env, "_CDUReset"), Napi::Function::New(env, _CDUReset));
 	exports.Set(Napi::String::New(env, "_CDUSetCassetteNumber"), Napi::Function::New(env, _CDUSetCassetteNumber));
 	exports.Set(Napi::String::New(env, "_CDUDispense"), Napi::Function::New(env, _CDUDispense));

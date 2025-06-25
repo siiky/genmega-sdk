@@ -118,9 +118,9 @@ operationResult CDUGetLastError ()
 	return result;
 }
 
-operationResult CDUVerifyLicenseKey (char* licenseKey)
+operationResult CDURegisterLicenseKey (const char * licenseKey)
 {
 	operationResult result;
-	result.return_int = CDU_Verify_LicenseKey(licenseKey);
+	result.return_int = CDU_RegisterLicenseKey(licenseKey);
 	return result;
 }
