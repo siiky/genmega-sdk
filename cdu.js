@@ -7,8 +7,8 @@ exports.getLastError = () => {
     return data
 }
 
-exports.open = serialPortName => {
-    const { return_int, data } = genmega._CDUOpen(serialPortName)
+exports.openEx = (licenseKey, serialPortName) => {
+    const { return_int, data } = genmega._CDUOpenEx(licenseKey, serialPortName)
     const return_code = return_codes[return_int]
     const return_message = return_messages[return_int]
     console.log('CDU Firmware Version: ', data)
@@ -44,8 +44,8 @@ exports.status = () => {
     return { return_int, return_code, return_message, statuses }
 }
 
-exports.verifyLicenseKey = licenseKey => {
-    const { return_int } = genmega._CDUVerifyLicenseKey(licenseKey)
+exports.registerLicenseKey = licenseKey => {
+    const { return_int } = genmega._CDURegisterLicenseKey(licenseKey)
     const return_code = return_codes[return_int]
     const return_message = return_messages[return_int]
     if (return_int < 0) console.error(`CDU VERIFY LICENSE KEY: ${return_code} (${return_int}): ${return_message}`)

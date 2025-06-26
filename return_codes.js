@@ -30,4 +30,6 @@ module.exports = {
   '-25': 'HM_DEV_FILENOTOPENED',
   '-26': 'HM_DEV_ERR_UNKNOWN',
   '-27': 'HM_DEV_SEMISUCCESS',
+  '-28': 'HM_DEV_NOT_REGISTER',
+  '-29': 'HM_DEV_OPEN_NOVAFAIL',
 }
