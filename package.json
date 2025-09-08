@@ -1,6 +1,6 @@
 {
   "name": "@lamassu/genmega",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "A node.js wrapper for the genmega SDK implementation",
   "main": "index.js",
   "directories": {
