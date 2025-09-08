@@ -50,6 +50,13 @@ bool StartScan (std::string serialPortName, int mobilePhoneMode, char presentati
 		goto error;
 	}
 
+//   this is for Newland scanners, unclear what happens on honeywell
+	_bcs_return_int = BCS_SetCommand("EXPLVL5");
+	if (_bcs_return_int != HM_DEV_OK) {
+		where = "BCS_SetCommand";
+		goto error;
+	}
+
 	_bcs_return_int = BCS_AcceptScanCode(presentationMode);
 	if (_bcs_return_int != HM_DEV_OK) {
 		where = "BCS_AcceptScanCode";
