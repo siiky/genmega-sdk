@@ -2,7 +2,10 @@ const genmega = require('./build/Release/genmega.node')
 const return_codes = require('./return_codes')
 const return_messages = require('./return_messages')
 
-exports.scan = (serialPortName, mobilePhoneMode) => {
+exports.scan = (serialPortName, mobilePhoneMode, extensions = []) => {
+  if (extensions.some(ext => typeof ext !== 'string'))
+    return Promise.reject(new Error("BCS extensions must be strings"))
+
   return new Promise(resolve => {
     /* There's a timeout at ~30s, but we never learn of it... */
     let timeout = setTimeout(() => {
@@ -17,6 +20,7 @@ exports.scan = (serialPortName, mobilePhoneMode) => {
     genmega._BCSScan(
       serialPortName,
       mobilePhoneMode,
+      extensions,
       (return_int, decoded) => {
         console.log("BCSScan result callback called with return_int", return_int, "and decoded", decoded, "(timedout?", !timeout ,")")
         if (timeout) {
