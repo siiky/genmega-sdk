@@ -30,19 +30,26 @@ void ScannedBarcodeDataCallBack (int iId, int iKind, BCSScanData * BcsScanData)
 	_bcs_scan_con.notify_all();
 }
 
+#define literal_array_length(arr) (sizeof(arr)/sizeof((arr)[0]))
+
 bool StartScan (std::string serialPortName, int mobilePhoneMode, char presentationMode)
 {
 	_bcs_data = std::string("");
 	_bcs_return_int = 0;
 	const char * where = "";
 
+	unsigned char szVerInfo[35] = {0};
+	std::string verInfo;
+
 	BCS_CallBackRegister(ScannedBarcodeDataCallBack);
 
-	_bcs_return_int = BCS_Open(serialPortName.c_str(), mobilePhoneMode);
+	_bcs_return_int = BCS_OpenEx(serialPortName.c_str(), mobilePhoneMode, szVerInfo);
 	if (_bcs_return_int != HM_DEV_OK) {
-		where = "BCS_Open";
+		where = "BCS_OpenEx";
 		goto error;
 	}
+	verInfo = std::string(reinterpret_cast<const char*>(szVerInfo), literal_array_length(szVerInfo));
+	fprintf(stderr, "\n DEBUG: BCS_OpenEx():verInfo = %s\n", verInfo.c_str());
 
 	_bcs_return_int = BCS_Reset();
 	if (_bcs_return_int != HM_DEV_OK) {
