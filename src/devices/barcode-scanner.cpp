@@ -92,8 +92,9 @@ bool StartScan (std::string serialPortName, int mobilePhoneMode, char presentati
 	return true;
 
 error:
-	unsigned char errmsg[6] = {0};
+	unsigned char errmsg[7] = {0};
 	BCS_GetLastError(errmsg);
+	errmsg[literal_array_length(errmsg)-1] = '\0';
 	fprintf(stderr, "GM DEBUG: BCS FAIL (%d) at %s: %s\n", _bcs_return_int, where, errmsg);
 	BCS_Close();
 	return false;
