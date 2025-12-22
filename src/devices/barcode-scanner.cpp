@@ -32,6 +32,41 @@ void ScannedBarcodeDataCallBack (int iId, int iKind, BCSScanData * BcsScanData)
 
 #define literal_array_length(arr) (sizeof(arr)/sizeof((arr)[0]))
 
+struct operationResult BCSGetInfo (std::string serialPortName)
+{
+	struct operationResult ret;
+	const char * where = "";
+
+	// TODO remove this magic number (contacted GenMega, waiting)
+	unsigned char deviceInfor[1025] = {0};
+
+	ret.return_int = BCS_Open(serialPortName.c_str(), 0);
+	if (ret.return_int != HM_DEV_OK) {
+		where = "BCS_Open";
+		goto error;
+	}
+
+	ret.return_int = BCS_GetInfor(deviceInfor);
+	if (ret.return_int != HM_DEV_OK) {
+		where = "BCS_GetInfor";
+		goto error;
+	}
+	deviceInfor[literal_array_length(deviceInfor)-1] = '\0';
+	ret.data = std::string(reinterpret_cast<const char*>(deviceInfor), literal_array_length(deviceInfor));
+
+	BCS_Close();
+
+	return ret;
+
+error:
+	unsigned char errmsg[7] = {0};
+	BCS_GetLastError(errmsg);
+	errmsg[literal_array_length(errmsg)-1] = '\0';
+	fprintf(stderr, "GM DEBUG: BCS FAIL (%d) at %s: %s\n", ret.return_int, where, errmsg);
+	BCS_Close();
+	return ret;
+}
+
 bool StartScan (std::string serialPortName, int mobilePhoneMode, char presentationMode, std::vector<std::string> extensions)
 {
 	_bcs_data = std::string("");

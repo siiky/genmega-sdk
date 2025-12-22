@@ -2,6 +2,19 @@ const genmega = require('./build/Release/genmega.node')
 const return_codes = require('./return_codes')
 const return_messages = require('./return_messages')
 
+exports.getInfo = serialPortName => {
+  const serialPortNameType = typeof serialPortName
+  if (serialPortNameType !== 'string')
+    throw new Error(`BCS serial port name must be a string; got ${serialPortName} (${serialPortNameType})`)
+  const { data, return_int } = genmega._BCSGetInfo(serialPortName)
+  return {
+    data,
+    return_int,
+    return_code: return_codes[return_int],
+    return_message: return_messages[return_int],
+  }
+}
+
 exports.scan = (serialPortName, mobilePhoneMode, extensions = []) => {
   if (extensions.some(ext => typeof ext !== 'string'))
     return Promise.reject(new Error("BCS extensions must be strings"))
