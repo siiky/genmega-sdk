@@ -16,6 +16,13 @@ exports.getInfo = serialPortName => {
 }
 
 exports.scan = (serialPortName, mobilePhoneMode, extensions = []) => {
+  const serialPortNameType = typeof serialPortName
+  if (serialPortNameType !== 'string')
+    return Promise.reject(new Error(`BCS serial port name must be a string; got ${serialPortName} (${serialPortNameType})`))
+
+  if (![0, 1].includes(mobilePhoneMode))
+    return Promise.reject(new Error(`BCS mobile phone mode must be 0 or 1; got ${mobilePhoneMode}`))
+
   if (extensions.some(ext => typeof ext !== 'string'))
     return Promise.reject(new Error("BCS extensions must be strings"))
 
