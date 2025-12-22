@@ -38,9 +38,6 @@ bool StartScan (std::string serialPortName, int mobilePhoneMode, char presentati
 	_bcs_return_int = 0;
 	const char * where = "";
 
-	unsigned char szVerInfo[35] = {0};
-	std::string verInfo;
-
 	// TODO: remove this magic number (contact GenMega?)
 	unsigned char szDeviceInfor[1025] = {0};
 	std::string deviceInfor;
@@ -50,13 +47,11 @@ bool StartScan (std::string serialPortName, int mobilePhoneMode, char presentati
 
 	BCS_CallBackRegister(ScannedBarcodeDataCallBack);
 
-	_bcs_return_int = BCS_OpenEx(serialPortName.c_str(), mobilePhoneMode, szVerInfo);
+	_bcs_return_int = BCS_Open(serialPortName.c_str(), mobilePhoneMode);
 	if (_bcs_return_int != HM_DEV_OK) {
-		where = "BCS_OpenEx";
+		where = "BCS_Open";
 		goto error;
 	}
-	verInfo = std::string(reinterpret_cast<const char*>(szVerInfo), literal_array_length(szVerInfo));
-	fprintf(stderr, "\n DEBUG: BCS_OpenEx():verInfo = %s\n", verInfo.c_str());
 
 	_bcs_return_int = BCS_GetInfor(szDeviceInfor);
 	if (_bcs_return_int != HM_DEV_OK) {
