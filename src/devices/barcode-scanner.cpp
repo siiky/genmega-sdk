@@ -46,6 +46,7 @@ bool StartScan (std::string serialPortName, int mobilePhoneMode, char presentati
 	std::string deviceInfor;
 
 	const uint32_t nextensions = extensions.size();
+	unsigned char * extension = nullptr;
 
 	BCS_CallBackRegister(ScannedBarcodeDataCallBack);
 
@@ -72,12 +73,14 @@ bool StartScan (std::string serialPortName, int mobilePhoneMode, char presentati
 	}
 
 	for (uint32_t i = 0; i < nextensions; i++) {
-		_bcs_return_int = BCS_SetCommand(reinterpret_cast<unsigned char *>(extensions[i].data()));
+		extension = reinterpret_cast<unsigned char *>(const_cast<char *>(extensions[i].c_str()));
+		_bcs_return_int = BCS_SetCommand(extension);
 		if (_bcs_return_int != HM_DEV_OK) {
 			where = "BCS_SetCommand";
 			goto error;
 		}
 	}
+	extension = nullptr;
 
 	_bcs_return_int = BCS_AcceptScanCode(presentationMode);
 	if (_bcs_return_int != HM_DEV_OK) {

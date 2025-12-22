@@ -88,7 +88,8 @@ Napi::Object BAUSetCapabilitiesV2 (const Napi::CallbackInfo &info)
 Napi::Object BAUSetEnableDenomV2 (const Napi::CallbackInfo &info)
 {
 	std::string denominationData = info[0].ToString();
-	Napi::Object ret = mapToNapiObject(BAUSetEnableDenom(denominationData.data()), info);
+	char * denominationDataPtr = const_cast<char *>(denominationData.c_str());
+	Napi::Object ret = mapToNapiObject(BAUSetEnableDenom(denominationDataPtr), info);
 	return ret;
 }
 
@@ -230,7 +231,8 @@ Napi::Object _RPUCutPaper (const Napi::CallbackInfo &info)
 Napi::Object _RPUPrintText (const Napi::CallbackInfo &info)
 {
 	std::string textContent = info[0].ToString();
-	Napi::Object ret = mapToNapiObject(RPUPrintText(textContent.data()), info);
+	char * textContentPtr = const_cast<char *>(textContent.c_str());
+	Napi::Object ret = mapToNapiObject(RPUPrintText(textContentPtr), info);
 	return ret;
 }
 
